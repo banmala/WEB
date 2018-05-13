@@ -1,0 +1,14 @@
+Home page->index page->landing page->welcome page
+
+		 AB testing -- Split test 
+		 making user to try two or more sites design and check the response of the users
+
+		 Developer
+		 W3 checker--> syntax checking of tags 
+		 QA--> Quality Ascurance
+		 Testing (through users)::
+		 		->Alpha testing - making frends and others to check the site 
+		 		->Beta testing -> secondary testing-> testing just before the user gets the actual version
+		 		/there is beta version for any sites/
+		 		->Stable version--Even for stable version final test i.e split test is done to assure the users comfortability.
+		 		

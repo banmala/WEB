@@ -1,0 +1,19 @@
+GIT 
+	version control 
+			EG: V1.2.3
+			--Always start with 1.0.0 Semantic version 
+			V a.b.c
+				where	a->breath through change
+							Changesmade by whole team .Big changes .								
+						b->minor design changes
+							Changes made by few members
+						c->minor bugs fixing 
+							made by few members
+		VCS->version control system
+			- process of maintaining symantic version 
+COMMAND PROMPT
+	cd c:	-> Change directory
+	mkdir	->Make dirctory
+	rmdir	->remove directory
+	(paypal-> Elon moks)
+	

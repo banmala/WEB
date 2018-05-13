@@ -1,0 +1,8 @@
+ctrl+shift+m-->Mask
+          or select/ojject/mask with shape
+          banners:
+            hero banners
+            ads banners
+            product banners
+            sales banners
+alt+drag == copy paste of text and images

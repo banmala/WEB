@@ -1,0 +1,54 @@
+
+Movie chill
+	ROADMAP::
+
+		1.Account signup
+			Full Name
+			Email
+			phone number 
+			Adress
+			Password
+
+		2.Account Login
+
+		3.Ongoing movie lists/Featured movies/Upcoming movies
+			(Upto upcomming 7 days//Lists to be updated every 7 days)
+
+		4.Adding Trailer of the clicked movie
+			a> Short overview of the movie.
+
+		5.Showing Hall Interface for booked and available seats available with time.
+
+		6.Online booking 
+
+		7.Online payment
+
+		8.Provision of history of users booklist so as to evaluate regular customer.
+
+		9.Provision of Different Language.
+
+		10.Wishlists.
+
+		11.Provisions of offers like:
+			a> 1 ticket free if bought 5.
+			b> 20% cash back on festive occasions.
+			c> 5% off for regular customers who have been here more than 10 times.
+
+		12.Website Rating
+		13.Feedbacks and Comments.
+		14.Allow user to select intrested sort of movies and Notify User on Such flim releases.
+
+	Home Page:: 
+		1.Top Left: Logo 
+		2.Top right:Tag Line"Best Online MOvie Ticket Booking"
+		3.Then: Top left :Menu
+				Top right:Search 
+		4.List of Ongoing Movies
+		5.Footer: Name of Brand/Company, Adress and logo on right side.
+	Menu:
+		1.Ongoing Movies
+		2.Upcomming Movies
+		3.Featured Movies.
+		4.Offers
+		5.Language
+

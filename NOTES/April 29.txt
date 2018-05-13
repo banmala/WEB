@@ -1,0 +1,27 @@
+git init -> initialize git 
+cd ls-> show directory
+cd Desktop
+cd .. -> Back one step
+mkdir-> make directory
+rm -> remove file
+rm-rf	->remove file and folder
+touch -> make file
+clear -> clear screen
+
+	-stage
+		->unstaged(single)-> red
+		->staged(looking for someone)-> green
+		->commited(commited)-> message that nothing to commit
+git status
+git add .
+git commit -m "Comment"
+git log-> see saved msgs
+
+to reach content one step back -->git reset --hard <code>
+to re get the reverse  content -->git reset --hard <code>cd
+
+	cd .gitignore
+			 those file and folders name included in git ignore are ignored by the git 
+
+
+

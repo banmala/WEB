@@ -1,0 +1,30 @@
+git ignore
+ for git ignore:
+ 	make a .gitignore file 
+ 	open with sublime text 
+ 	then write file name or folder in it with extension 
+
+
+branching
+	git branch -> to know the current branch 
+	git branch abc -> to make a branch named abc
+	git checkout abc-> to change the branch from master to abc
+	merge abc-> to merge the branches and files
+
+	in case of conflict, resolve manually 
+
+	git --help -> for help 
+
+
+
+	 for backup 
+	  git remote add origin < url>
+	  git remote shhow origin 
+	  git push origin master    ->>to send branched to backup 
+  
+
+
+  boiler plate -> starter pack -> ready made oones which u can edit and add some other features
+
+  git clone <file url>
+  

@@ -1,0 +1,40 @@
+sir(9843034283\\sharma.biplav11@gnail.com)
+Skech
+protocols
+html
+	html- structural
+	css- presentational
+	js-behaviour
+
+A design is not how it looks or how it feels  but how it works.--Steeve Jobs
+		skech- helps in design consistency
+			design cocsistency is necessary so as to avoid user from being confuse!
+
+			
+			Skech:Lower Fidility
+			Wireframe: Higher Fidility
+			Wireframe: Higher Fidility
+			
+				fidility:Degree of exactness!
+		wireframe:
+			division of components
+			
+			--""Adobe XD"
+		
+		Prototyping:
+			Interaction of component 
+			-- in ""invision""
+HTML
+	
+CSS--->BootStrap-->SCSS(pre compiler)
+	-SACSS(Scalaver and MOdular Architecture for css) or BEMS
+	
+MOOD BOARD
+pintrest
+JS-->JQUERY-->AJAX/XHR/-JSON
+
+SPA'S
+ES6
+word press
+
+

@@ -1,0 +1,25 @@
+ACCOUNTS:
+	PINTEREST
+	MEDIUM
+	INVISION
+	DRIBBLE
+	UPLABS
+	GITHUB
+DOWNLOADS:
+	Adobe XD
+TEXT EDITOR:
+	SUBLIME TEXT
+	ATOM
+	BRACKETS
+	VS CODE
+plus:
+	Ruby(for css)
+	NODE JS
+	GITBASH
+
+news apps
+	feedly 
+	snapchat 
+	techinasia
+	medium
+	

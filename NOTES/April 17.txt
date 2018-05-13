@@ -1,0 +1,53 @@
+CONCEPT
+	start with small
+	MVP-Minimum Viable Product(initial product)
+	//CRM(Costomer ... Management)
+	ease of use to the user 
+	as easy as possible
+//Concept->Product->Ease of use . these three are inter related to each other//
+	
+	//itteration:
+		IDEA->BUILD->TEST->DEPLOY->IDEA:: simple loop//
+	optimization
+
+STRATEGY
+	(How to make)
+	product road map
+	Always evaluate worst case and make backup plan !
+
+BRAND GUIDELINE
+	//
+	"COLOR PSYCHOLOGY":
+			red and yellow re hungry color.
+			yellow-loyalty
+			orange- feels like ownself
+			red-energetic 
+			purple and pink-- calm creative useful artistic
+			blue-pleasant ,calm and dependable.
+			green-peace
+			white,black--they bring balance graph in user. neutral user performance..
+	"TYPOGRAPHY":
+		RULES:
+			12 rule->
+				h6-6px
+				h5,p-12px
+				h4-24px
+				h3-36px
+				h2-48px
+				h1-60px
+			14 rule->
+				h6-7px
+				h5,p-14px
+				h4-28
+				h3-
+				h2-
+				h1-
+			14(1/2) rule->
+			16 rule->
+			16(1/2) rule->
+	//,
+
+STEPS
+	Identification of neeads.
+	specify the targeted group of people
+

@@ -1,0 +1,40 @@
+/*
+Theme Name: SimpleMag
+Theme URI: http://themesindep.com/
+Author: ThemesIndep
+Author URI: http://themesindep.com/
+Description: Magazine theme for creative things
+Template: simplemag
+Version: 2.0
+*/
+
+
+@import url("../simplemag/style.css");
+
+/* Your CSS code goes here
+-------------------------------------- */
+
+.widget.AdWidget_ImageWidget img{
+  width: 100%;
+}
+
+#social-box li:after {
+  padding-left:8px;
+}
+
+#author-box .avatar {
+  width: initial;
+  height: initial;
+}
+
+#author-box .author-info, #author-box .author-social {
+  margin-left: 40%;
+}
+
+iframe[src="about:blank"] {
+  display: none;
+}
+
+.sidebar .flexslider {
+  height: 275px;
+}

@@ -1,0 +1,20 @@
+Xhtml vs html
+	
+	xhtml is strict version of html . some rules of Xhtml are :::
+
+			single tags/empty tags are to be clossed properly 
+			all tags are to be closed in order when once opened
+			xhtml is case sensitive but html5 is not 
+			values must be in quotes
+			tags must be in small letters 
+			so id attribute
+			properly nested
+			attributes minimization forbidden
+			DOC TYPE is mandotory 
+
+CSS 
+	three ways of implementing:
+		inline -> Not a good option
+		Internal -> in same file but outside the actual tag
+		external -> in different file outside
+		

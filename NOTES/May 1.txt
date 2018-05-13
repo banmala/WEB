@@ -1,0 +1,20 @@
+tags:
+	html-> Defiine html document
+	head-> Header information -> that is not seen but important 
+	title->
+	body-> main vision parts 
+	h-> heading 
+	<b>-> body 
+	<img src="url"> -> to include a image
+	$ npm install -g lite-server
+
+paths for image:
+	absolute path : 
+	relative path  :
+
+
+
+to install node js
+		npm-v   -> to check if node js is installed
+		npm install -g lite-server
+		

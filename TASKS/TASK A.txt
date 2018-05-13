@@ -1,0 +1,10 @@
+PROJECT--A website on online boking of movie tickets:MOVIE HUB
+	1.Account signup/login 
+	2.Ongoing movie lists/Featured movies/Upcoming movies.
+	3.Online booking
+	4.Online payment
+	5.Movie interface
+	6.Wishlist/Private Sponsers
+	7.Trailers
+	8.Language 
+	9.OTP(one time password)

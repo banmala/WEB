@@ -1,0 +1,53 @@
+CD	change directory 
+mkdir  make directory 
+rm removeo file/folders
+
+	Git commands->	initialize git
+	git status -> status of repo 
+	git add . or git add <filename>  -> change file to staged
+	git log -> shows commit history 
+	git reset -> changes head of repo heads/checkpoint 
+	git branch -> shows branches with current branch 
+	git branch abc -> make new branch abc
+	git checkout abc -> change branch 
+	git remote add origin <url> -> connect to remote repo
+	git push origin <branch name> -> push master branch 
+	git push origin -b <branch name >   -> push any branch 
+	git merge <branch name>  -> merge the branch with current branch 
+	git clone --> to clone or download the repo grom remote host 
+
+
+HTML CODES
+	<div> : Block element 
+
+	<spam> : Inline element
+
+	span always takes size of its child . 
+
+	header:  iloveu12345
+Parts:
+	Parent child
+
+	main parent : HTML
+	child : head and body 
+
+	then parent : head
+	child : title
+
+NOTE::::
+		 All the information about the page is written in head ! they are non visible content 
+
+
+		 and all the presentation parts of the page is written in the body 
+
+		 	in body :;
+		 		header 
+		 		main 
+		 		aside
+		 		footer 
+
+		 br- break rule
+		 hr horizontal rule
+		  
+
+

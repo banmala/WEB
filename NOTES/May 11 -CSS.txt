@@ -1,0 +1,11 @@
+CSS is the one that is used to make use of reusuable components
+-->> Using single property thousands of time 
+-->> Defining colour variable
+
+
+ionicons.com
+colour: initial  -->initial default colour
+colour: inherit  -> take colour of parent 
+
+
+list-styleiimage = url("");

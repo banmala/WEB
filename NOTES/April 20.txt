@@ -1,0 +1,9 @@
+LIGATURE SYMBOL
+ctl G --> Group 
+and name group 
+
+
+Header: 
+		Header 1
+		Header 2
+		

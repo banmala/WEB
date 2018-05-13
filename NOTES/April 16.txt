@@ -1,0 +1,24 @@
+Design usabillity 
+confortable usabillity makes habit ! design can change ur habit
+brand guidelines:		
+		typography 
+		size
+		logos
+		etc
+CONCEPT
+	eveluation of requirement
+	visualization
+	strategy 
+RESEARCH(PINTEREST)
+	
+WIREFRAMING
+	skech(paper)
+	XD/Photoshop/Skech App
+	
+PRATOTYPING
+	invision
+	
+Intro to Code and version control
+	GIT
+	
+	

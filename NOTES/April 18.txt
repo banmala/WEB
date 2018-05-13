@@ -1,0 +1,26 @@
+Brand guidelines:
+	Topography:
+		What font?
+		what font size?
+		paragraph style?
+		heading style?
+	Color:
+		Primary Color: blue for fb
+		Secondary Color: light blue for fb
+		tertiary color: red for fb
+		base color: Gray for fb
+		background color:
+		font color:
+do's and Don't of Website:
+		SEO: Search Engine Optimization
+			To optimize owns website at top of search engine.
+			//CRAWLER: Spyder is crawling engine of google.com
+						it crawls in C shape
+						render-- Display.//
+
+		UI: User interface
+		UX: User Experience
+		Increasing Usability of User
+		USER EXPERIENCE:
+			F-Shape UX Pattern
+	pillars for a website: Viability,

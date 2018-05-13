@@ -1,0 +1,51 @@
+for travelling agency page::
+
+		homepage
+		search 
+		photo gallery 
+		services
+		detail
+		packages list 
+		package detail
+		about us
+		contact us
+		ticketing 
+		feedback 
+
+music site
+		 home page
+		 search 
+		 category 
+		 listing 
+		 login signup 
+		 wishlist
+		 details
+		 about us
+		 feed back
+		 album list 
+		 singer list 
+e learning 
+		 home page 
+		 login 
+		 signup
+		 categories
+		 listing of course
+		 community
+		 about us
+		 contact us
+		 details
+		 search 
+		 question bank 
+		 tutorial vedeos detail 
+
+
+newssssssss
+		 homepage'categories
+		 search 
+		 interviews
+		 listing 
+		 detailslogin 
+		 signup 
+		 contact us
+		 videos
+		 community

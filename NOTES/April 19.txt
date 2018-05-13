@@ -1,0 +1,4 @@
+grid type of colomns  in our website!
+ factorial of 12 integral columns
+ i.e if we want 4 columns we can make 4 columns of 3 columns each 
+ SKECHING 

@@ -1,0 +1,592 @@
+// 4/10/2017 - added redirect on signup
+
+var Kicksend = {
+  mailcheck: {
+    threshold: 3,
+    defaultDomains: [ "yahoo.com", "google.com", "hotmail.com", "gmail.com", "me.com", "aol.com", "mac.com", "live.com", "comcast.net", "googlemail.com", "msn.com", "hotmail.co.uk", "yahoo.co.uk", "facebook.com", "verizon.net", "sbcglobal.net", "att.net", "gmx.com", "mail.com", "outlook.com" ],
+    defaultTopLevelDomains: [ "co.jp", "co.uk", "com", "net", "org", "info", "edu", "gov", "mil" ],
+    run: function(opts) {
+      opts.domains = opts.domains || Kicksend.mailcheck.defaultDomains;
+      opts.topLevelDomains = opts.topLevelDomains || Kicksend.mailcheck.defaultTopLevelDomains;
+      opts.distanceFunction = opts.distanceFunction || Kicksend.sift3Distance;
+      var result = Kicksend.mailcheck.suggest(encodeURI(opts.email), opts.domains, opts.topLevelDomains, opts.distanceFunction);
+      if (result) {
+        if (opts.suggested) {
+          opts.suggested(result);
+        }
+      } else {
+        if (opts.empty) {
+          opts.empty();
+        }
+      }
+    },
+    suggest: function(email, domains, topLevelDomains, distanceFunction) {
+      email = email.toLowerCase();
+      var emailParts = this.splitEmail(email);
+      var closestDomain = this.findClosestDomain(emailParts.domain, domains, distanceFunction);
+      if (closestDomain) {
+        if (closestDomain != emailParts.domain) {
+          return {
+            address: emailParts.address,
+            domain: closestDomain,
+            full: emailParts.address + "@" + closestDomain
+          };
+        }
+      } else {
+        var closestTopLevelDomain = this.findClosestDomain(emailParts.topLevelDomain, topLevelDomains);
+        if (emailParts.domain && closestTopLevelDomain && closestTopLevelDomain != emailParts.topLevelDomain) {
+          var domain = emailParts.domain;
+          closestDomain = domain.substring(0, domain.lastIndexOf(emailParts.topLevelDomain)) + closestTopLevelDomain;
+          return {
+            address: emailParts.address,
+            domain: closestDomain,
+            full: emailParts.address + "@" + closestDomain
+          };
+        }
+      }
+      return false;
+    },
+    findClosestDomain: function(domain, domains, distanceFunction) {
+      var dist;
+      var minDist = 99;
+      var closestDomain = null;
+      if (!domain || !domains) {
+        return false;
+      }
+      if (!distanceFunction) {
+        distanceFunction = this.sift3Distance;
+      }
+      for (var i = 0; i < domains.length; i++) {
+        if (domain === domains[i]) {
+          return domain;
+        }
+        dist = distanceFunction(domain, domains[i]);
+        if (dist < minDist) {
+          minDist = dist;
+          closestDomain = domains[i];
+        }
+      }
+      if (minDist <= this.threshold && closestDomain !== null) {
+        return closestDomain;
+      } else {
+        return false;
+      }
+    },
+    sift3Distance: function(s1, s2) {
+      if (s1 == null || s1.length === 0) {
+        if (s2 == null || s2.length === 0) {
+          return 0;
+        } else {
+          return s2.length;
+        }
+      }
+      if (s2 == null || s2.length === 0) {
+        return s1.length;
+      }
+      var c = 0;
+      var offset1 = 0;
+      var offset2 = 0;
+      var lcs = 0;
+      var maxOffset = 5;
+      while (c + offset1 < s1.length && c + offset2 < s2.length) {
+        if (s1.charAt(c + offset1) == s2.charAt(c + offset2)) {
+          lcs++;
+        } else {
+          offset1 = 0;
+          offset2 = 0;
+          for (var i = 0; i < maxOffset; i++) {
+            if (c + i < s1.length && s1.charAt(c + i) == s2.charAt(c)) {
+              offset1 = i;
+              break;
+            }
+            if (c + i < s2.length && s1.charAt(c) == s2.charAt(c + i)) {
+              offset2 = i;
+              break;
+            }
+          }
+        }
+        c++;
+      }
+      return (s1.length + s2.length) / 2 - lcs;
+    },
+    splitEmail: function(email) {
+      var parts = email.split("@");
+      if (parts.length < 2) {
+        return false;
+      }
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i] === "") {
+          return false;
+        }
+      }
+      var domain = parts.pop();
+      var domainParts = domain.split(".");
+      var tld = "";
+      if (domainParts.length == 0) {
+        return false;
+      } else if (domainParts.length == 1) {
+        tld = domainParts[0];
+      } else {
+        for (var i = 1; i < domainParts.length; i++) {
+          tld += domainParts[i] + ".";
+        }
+        if (domainParts.length >= 2) {
+          tld = tld.substring(0, tld.length - 1);
+        }
+      }
+      return {
+        topLevelDomain: tld,
+        domain: domain,
+        address: parts.join("@")
+      };
+    }
+  }
+};
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = Kicksend.mailcheck;
+}
+
+if (typeof window !== "undefined" && window.jQuery) {
+  (function($) {
+    $.fn.mailcheck = function(opts) {
+      var self = this;
+      if (opts.suggested) {
+        var oldSuggested = opts.suggested;
+        opts.suggested = function(result) {
+          oldSuggested(self, result);
+        };
+      }
+      if (opts.empty) {
+        var oldEmpty = opts.empty;
+        opts.empty = function() {
+          oldEmpty.call(null, self);
+        };
+      }
+      opts.email = this.val();
+      Kicksend.mailcheck.run(opts);
+    };
+  })(jQuery);
+}
+
+var monster = {
+  set: function(name, value, days, path, secure) {
+    var date = new Date(), expires = "", type = typeof value, valueToUse = "", secureFlag = "";
+    path = path || "/";
+    if (days) {
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
+      expires = "; expires=" + date.toUTCString();
+    }
+    if (type === "object" && type !== "undefined") {
+      if (!("JSON" in window)) throw "Bummer, your browser doesn't support JSON parsing.";
+      valueToUse = JSON.stringify({
+        v: value
+      });
+    } else {
+      valueToUse = encodeURIComponent(value);
+    }
+    if (secure) {
+      secureFlag = "; secure";
+    }
+    document.cookie = name + "=" + valueToUse + expires + "; path=" + path + secureFlag;
+  },
+  get: function(name) {
+    var nameEQ = name + "=", ca = document.cookie.split(";"), value = "", firstChar = "", parsed = {};
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) {
+        value = c.substring(nameEQ.length, c.length);
+        firstChar = value.substring(0, 1);
+        if (firstChar == "{") {
+          parsed = JSON.parse(value);
+          if ("v" in parsed) return parsed.v;
+        }
+        if (value == "undefined") return undefined;
+        return decodeURIComponent(value);
+      }
+    }
+    return null;
+  },
+  remove: function(name) {
+    this.set(name, "", -1);
+  },
+  increment: function(name, days) {
+    var value = this.get(name) || 0;
+    this.set(name, parseInt(value, 10) + 1, days);
+  },
+  decrement: function(name, days) {
+    var value = this.get(name) || 0;
+    this.set(name, parseInt(value, 10) - 1, days);
+  }
+};
+
+var WebflowMarketing = function() {
+  "use strict";
+  var api = {};
+  var REF_COOKIE_NAME = "wf_ref_code";
+  var ACTIVE_CLASS = "active";
+  var INVALID_CLASS = "invalid";
+  var DISABLED_CLASS = "disabled";
+  var SEGMENT_CARD_CLASS = "segment-card";
+  var OPACITY = "opacity";
+  var TRANSITION_OPACITY_IN = OPACITY + " 250ms ease-out-quad";
+  var TRANSITION_OPACITY_OUT = OPACITY + " 150ms ease-in-quad";
+  var TRANSFORM = "transform";
+  var TRANSITION_TRANSFORM_IN = TRANSFORM + " 250ms ease-out-quint";
+  var TRANSITION_TRANSFORM_OUT = TRANSFORM + " 250ms ease-in-quad";
+  var INPUT_FIEDS_SELECTOR = "input[type=text], input[type=email], input[type=password]";
+  var doc = document;
+  var $doc = $(document);
+  var win = window;
+  var $win = $(win);
+  var loc = win.location;
+  var body;
+  var pageName;
+  var mobileBrowser = false;
+  var desktopBrowser = false;
+  var userAgent = navigator.userAgent;
+  var isSafari = /safari/i.test(userAgent) && !/chrome/i.test(userAgent);
+  api.init = function() {
+    var referralCode = _qstring("r");
+    var html = $("html");
+    body = $("body");
+    pageName = body.data("page");
+    mobileBrowser = html.hasClass("w-mobile");
+    desktopBrowser = html.hasClass("w-desktop");
+    if (referralCode) {
+      monster.set(REF_COOKIE_NAME, referralCode, 365);
+    }
+    _initSignupForm();
+  };
+  function _initSignupForm() {
+    $.each($("form.sign-up-form").find(INPUT_FIEDS_SELECTOR), function() {
+      var input = $(this);
+      var inputType = input.attr("type");
+      var isEmail = inputType === "email";
+      var isPassword = inputType === "password";
+      var placeholder = input.attr("placeholder");
+      var floatLabel = $('<div class="float-label">' + placeholder + "</div>");
+      var emailSuggestion = isEmail ? input.next("div.email-suggestion") : null;
+      var correctEmailLink = isEmail ? emailSuggestion.find("> a.suggestion") : null;
+      var passwordValidator = isPassword ? input.next("div.validator") : null;
+      var lastSuggestion = null;
+      input.before(floatLabel);
+      input.on("keyup blur", function(e) {
+        var blurEvent = e.type === "blur";
+        var keyEvent = !blurEvent;
+        var empty = _trim(input.val()) === "";
+        if (!empty) {
+          input.removeClass(INVALID_CLASS);
+          tram(floatLabel).add(TRANSITION_OPACITY_IN).add(TRANSITION_TRANSFORM_IN).start({
+            y: -30,
+            opacity: blurEvent ? .5 : 1
+          });
+        } else {
+          tram(floatLabel).add(TRANSITION_OPACITY_OUT).add(TRANSITION_TRANSFORM_OUT).start({
+            y: 1,
+            opacity: 0
+          });
+        }
+        if (blurEvent && emailSuggestion) {
+          input.mailcheck({
+            topLevelDomains: [ "co.jp", "co.uk", "com", "net", "org", "info", "edu", "gov", "mil", "biz", "pro", "io", "name", "ru", "de", "cn", "co.br", "br", "pl", "fr", "it", "in", "nl", "au", "ir", "es", "eu", "cz", "ca", "ua", "za", "ro", "se", "mx", "us", "tv", "ch", "dk" ],
+            suggested: function(element, suggestion) {
+              if (!_validEmail(suggestion.full)) {
+                _hideValidator(emailSuggestion);
+                return;
+              }
+              if (/.cn$/.test(suggestion.domain)) {
+                suggestion.domain = suggestion.domain.replace(/.cn$/, ".com");
+                suggestion.full = suggestion.full.replace(/.cn$/, ".com");
+              }
+              lastSuggestion = suggestion;
+              var emailLink = emailSuggestion.find("> a.suggestion");
+              emailLink.html(suggestion.full.replace(suggestion.domain, '<span class="correct">' + suggestion.domain + "</span>"));
+              _showValidator(emailSuggestion);
+            },
+            empty: function(element) {
+              _hideValidator(emailSuggestion);
+            }
+          });
+        } else if (blurEvent && isPassword && passwordValidator) {
+          var password = _trim(input.val());
+          if (password !== "" && !_validPassword(password)) {
+            _showValidator(passwordValidator);
+          } else {
+            _hideValidator(passwordValidator);
+          }
+        }
+        if (blurEvent) {
+          _validate(input);
+        }
+        if (keyEvent && emailSuggestion && lastSuggestion && input.val() === lastSuggestion.full) {
+          _hideValidator(emailSuggestion);
+        }
+        if (keyEvent && passwordValidator && _validPassword(_trim(input.val()))) {
+          _hideValidator(passwordValidator);
+        }
+      });
+      if (correctEmailLink) {
+        correctEmailLink.on("click", function(e) {
+          e.preventDefault();
+          if (lastSuggestion) {
+            var emailInput = emailSuggestion.prev();
+            var oldEmail = emailInput.val();
+            var newEmail = lastSuggestion.full;
+            emailInput.val(newEmail);
+            _hideValidator(emailSuggestion);
+            lastSuggestion = null;
+            analytics.track("Corrected Email", {
+              page: pageName,
+              from: oldEmail,
+              to: newEmail
+            });
+          }
+        });
+      }
+    });
+    $("form.sign-up-form input[type=submit]").on("click", function(e) {
+      e.preventDefault();
+      var button = $(this);
+      if (button.hasClass(DISABLED_CLASS)) {
+        return;
+      }
+      var form = button.closest("form");
+      var inputs = form.find(INPUT_FIEDS_SELECTOR);
+      var valid = true;
+      var invalidFields = [];
+      $.each(inputs, function() {
+        var input = $(this);
+        if (!_validate(input)) {
+          valid = false;
+          invalidFields.push(input);
+        }
+      });
+      if (valid) {
+        button.addClass(DISABLED_CLASS);
+        button.attr(DISABLED_CLASS, DISABLED_CLASS);
+        button.attr("value", button.data("wait-text"));
+        var name = form.find("input[data-field=name], input.name");
+        var email = form.find("input[data-field=email], input.email");
+        var pass = form.find("input[data-field=password], input.password");
+        _createAccount(name.val(), email.val(), pass.val(), button, {
+          afterFinish: function(hasError) {
+            if (hasError) {
+              button.removeClass(DISABLED_CLASS);
+              button.removeAttr(DISABLED_CLASS);
+              button.attr("value", button.data("text"));
+            }
+          },
+          emailExists: function() {
+            email.focus();
+            email.addClass("invalid").select();
+            alert("Oops! It looks like you have already registered with that email address. Click on Log In to sign in to your dashboard.");
+            _bugsnag("EmailExistsError", "Email already taken", {
+              page: pageName,
+              email: email.val()
+            });
+          }
+        });
+      } else {
+        tram(invalidFields).add("transform 200ms ease-in-out-quad").start({
+          x: 4
+        }).then({
+          x: -2
+        }).then({
+          x: 0
+        });
+      }
+    });
+  }
+  function _validate(input) {
+    var trimmed = _trim(input.val());
+    var isEmpty = trimmed === "";
+    var inputType = input.attr("type");
+    var isEmail = inputType === "email";
+    var isPassword = inputType === "password";
+    var valid = !isEmpty;
+    if (valid && isEmail && !_validEmail(trimmed)) {
+      valid = false;
+    }
+    if (valid && isPassword && !_validPassword(trimmed)) {
+      valid = false;
+      analytics.track("Weak Password on Signup", {
+        page: pageName
+      });
+    }
+    input.toggleClass(INVALID_CLASS, !valid);
+    return valid;
+  }
+  function _validEmail(email) {
+    if (!/((([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?/.test(email)) {
+      return false;
+    }
+    if (/@(\w*mailinat[o|e]r\w*|binkmail|devnullmail|norih|vps30|letthemeatspam|\w*spamdatabase\w*|safetymail|\d+minutemail|\w+realemail|spamhere\w*|guerillamail\w*|dispostable|yopmail|spamgourmet|sharklasers)./.test(email)) {
+      analytics.track("Temp Email", {
+        email: email
+      });
+      return false;
+    }
+    if (/@sharklasers./.test(email)) {
+      analytics.track("Shark Lasers", {
+        email: email
+      });
+      console.info("Pew Pew!");
+      return false;
+    }
+    return true;
+  }
+  function _validPassword(pass) {
+    if (pass.length < 6) {
+      return false;
+    }
+    if (/^(1234567?8?9?0?|0?9?8?7?654321|(password|monkey|iloveyou|letmein|dragon|(base|foot|basket)ball|trustno|sunshine|master|ninja|ashley|welcome|jesus|asdf|asdfasdf|pass|abc)\d{0,4}|[q|a][w|z]erty\d{0,10}|0{6,20}|1{6,20}|2{6,20}|3{6,20}|[0|1|2|3]{6,20}|[8|9|0]{6,20}|[a|b|c]{6,20})$/i.test(pass)) {
+      return false;
+    }
+    return true;
+  }
+  function _showValidator(element) {
+    element.addClass(ACTIVE_CLASS);
+    tram(element).add(TRANSITION_OPACITY_IN).add(TRANSITION_TRANSFORM_IN).start({
+      y: 0,
+      opacity: 1
+    });
+  }
+  function _hideValidator(element) {
+    element.removeClass(ACTIVE_CLASS);
+    tram(element).add(TRANSITION_OPACITY_OUT).add(TRANSITION_TRANSFORM_OUT).start({
+      y: -25,
+      opacity: 0
+    });
+  }
+  function _createAccount(name, email, password, submitButton, options) {
+    options = options || {};
+    var referralCode = _qstring("r") || monster.get(REF_COOKIE_NAME);
+    var startupBundle = _qstring("sb");
+    var onStartupPage = window.location.pathname === '/startup-kit';
+    var hasError = false;
+    $.ajax({
+      url: "https://webflow.com/api/user",
+      type: "POST",
+      dataType: "json",
+      data: {
+        user: {
+          firstName: name,
+          email: email,
+          password: password
+        },
+        refId: referralCode
+      }
+    }).done(function(data) {
+      analytics.track("Sign Up", {
+        type: "marketing"
+      });
+      setTimeout(function() {
+        if (startupBundle || onStartupPage) {
+          window.location = '/dashboard/sites/new?t=5908bf0c7b1cad58497db0a4&d=STARTUPBUNDLE2017';
+        } else {
+          window.location = "/dashboard/sites/new?a=1";
+        }
+      }, 800);
+    }).fail(function(xhr, status, err) {
+      hasError = true;
+      var json = xhr ? xhr.responseJSON : null;
+      if (json && json.msg) {
+        if (json.msg === "email already exists!") {
+          if (options.emailExists) {
+            options.emailExists();
+            return;
+          }
+        } else {
+          alert(json.msg);
+        }
+      }
+      _bugsnag("UserSignupError", "A user signup failed!", {
+        page: pageName,
+        response: json,
+        status: status,
+        error: err
+      });
+    }).always(function() {
+      if (options.afterFinish) {
+        options.afterFinish(hasError);
+      }
+    });
+  }
+  function _qstring(key) {
+    var vars = [];
+    var hash;
+    var hashes = loc.href.slice(loc.href.indexOf("?") + 1).split("&");
+    for (var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split("=");
+      if (hash.length < 2) {
+        continue;
+      }
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    if (key) {
+      return vars[key] || null;
+    }
+    return vars;
+  }
+  function _trim(str) {
+    return (str || "").replace().replace(/^\s+|\s+$/g, "");
+  }
+  function _bugsnag(error, message, meta) {
+    if (typeof Bugsnag === "undefined" || !Bugsnag) {
+      return;
+    }
+    try {
+      Bugsnag.notify(error, message, {
+        metaData: meta
+      });
+    } catch (e) {}
+  }
+  function _smoothScroll(el, offset) {
+    var start = $win.scrollTop();
+    var end = el.offset().top - offset;
+    var clock = Date.now();
+    var animate = win.requestAnimationFrame || win.mozRequestAnimationFrame || win.webkitRequestAnimationFrame || function(fn) {
+      win.setTimeout(fn, 15);
+    };
+    var duration = 472.143 * Math.log(Math.abs(start - end) + 125) - 2e3;
+    var step = function() {
+      var elapsed = Date.now() - clock;
+      win.scroll(0, _getY(start, end, elapsed, duration));
+      if (elapsed <= duration) {
+        animate(step);
+      }
+    };
+    step();
+  }
+  function _getY(start, end, elapsed, duration) {
+    if (elapsed > duration) {
+      return end;
+    }
+    return start + (end - start) * _ease(elapsed / duration);
+  }
+  function _ease(t) {
+    return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  }
+  function _throttle(func) {
+    var wait, args, context;
+    return function() {
+      if (wait) return;
+      wait = true;
+      args = arguments;
+      context = this;
+      window.tram.frame(function() {
+        wait = false;
+        func.apply(context, args);
+      });
+    };
+  }
+  return api;
+}();
+
+$(document).ready(function() {
+  "use strict";
+  WebflowMarketing.init();
+});
